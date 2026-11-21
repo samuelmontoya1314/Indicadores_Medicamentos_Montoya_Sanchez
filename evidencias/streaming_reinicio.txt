@@ -1,0 +1,6 @@
+Checkpoint previo: sí (reinicio)
+Antes  -> ventanas: 8, mensajes acumulados: 156281
+
+Mensajes leídos de Kafka en esta corrida: 0 (0 micro-lote/s)
+Después -> ventanas: 8, mensajes acumulados: 156281
+Reinicio verificado: el checkpoint evitó reprocesar mensajes ya leídos.

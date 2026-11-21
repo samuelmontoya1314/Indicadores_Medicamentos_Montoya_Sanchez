@@ -1,0 +1,4 @@
+14.2 M  14.2 M  /datalake/curada
+154  154        /datalake/descartados
+1.1 K  1.1 K    /datalake/mapreduce
+161.0 M  161.0 M  /datalake/raw

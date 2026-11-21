@@ -1,0 +1,6 @@
+pyspark==3.5.3
+confluent-kafka>=2.4
+requests>=2.31
+pandas>=2.0
+plotly>=5.20
+

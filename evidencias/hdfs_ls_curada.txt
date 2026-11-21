@@ -1,0 +1,14 @@
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=A
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=B
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=C
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=D
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=G
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=H
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=J
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=L
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=M
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=N
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=P
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=R
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=S
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/curada/cum/atc_nivel1=V

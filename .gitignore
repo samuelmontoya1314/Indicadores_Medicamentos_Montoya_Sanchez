@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+# Datos pesados: en el repo solo va una muestra (ver data/muestra_raw/)
+data/raw/
+data/tmp/
+data/state/
+spark-warehouse/
+metastore_db/
+derby.log
+

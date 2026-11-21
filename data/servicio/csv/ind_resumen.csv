@@ -1,0 +1,2 @@
+cum_total,cum_activos,registros_sanitarios,titulares_activos,principios_activos,fecha_corte_fuente,filas_curadas,cum_inactivos,pct_cum_activos_con_importador,pct_top10_titulares,fuente,url_fuente,fecha_proceso
+65441,50255,9500,1159,5931,2026-11-16T12:13:21.891Z,156281,15186,38.6,31.7,"Código Único de Medicamentos (CUM) vigentes - INVIMA (datos.gov.co, dataset i7cb-raxc)",https://www.datos.gov.co/resource/i7cb-raxc.json,2026-11-21T14:32:00-05:00

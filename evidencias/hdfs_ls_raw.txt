@@ -1,0 +1,11 @@
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/raw/datos.gov.co
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc
+drwxr-xr-x   - root supergroup          0 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21
+-rw-r--r--   1 root supergroup   21604112 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0001.jsonl
+-rw-r--r--   1 root supergroup   21598430 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0002.jsonl
+-rw-r--r--   1 root supergroup   21610294 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0003.jsonl
+-rw-r--r--   1 root supergroup   21595008 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0004.jsonl
+-rw-r--r--   1 root supergroup   21608915 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0005.jsonl
+-rw-r--r--   1 root supergroup   21601204 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0006.jsonl
+-rw-r--r--   1 root supergroup   21599871 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0007.jsonl
+-rw-r--r--   1 root supergroup   17565646 2026-11-21 14:31 /datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0008.jsonl

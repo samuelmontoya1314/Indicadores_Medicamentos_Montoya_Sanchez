@@ -1,0 +1,64 @@
+{
+  "run_id": "20261121T143130",
+  "fecha": "2026-11-21T14:31:30-05:00",
+  "filas_leidas_raw": 156281,
+  "descartados": {
+    "sin_columnas_clave": 0,
+    "duplicados_id_registro": 0,
+    "total": 0
+  },
+  "filas_curadas": 156281,
+  "reglas": [
+    {
+      "regla": "conteo_mayor_que_cero",
+      "critica": true,
+      "ok": true,
+      "filas_afectadas": 0,
+      "detalle": "156281 filas curadas"
+    },
+    {
+      "regla": "sin_nulos_en_columnas_clave",
+      "critica": true,
+      "ok": true,
+      "filas_afectadas": 0,
+      "detalle": "id_registro, expediente, consecutivocum"
+    },
+    {
+      "regla": "id_registro_sin_repetidos",
+      "critica": true,
+      "ok": true,
+      "filas_afectadas": 0,
+      "detalle": "llave de deduplicación"
+    },
+    {
+      "regla": "cantidades_en_rango",
+      "critica": false,
+      "ok": true,
+      "filas_afectadas": 0,
+      "detalle": "cantidad >= 0 y cantidadcum > 0"
+    },
+    {
+      "regla": "fechaexpedicion_en_rango",
+      "critica": false,
+      "ok": true,
+      "filas_afectadas": 0,
+      "detalle": "entre 1950-01-01 y hoy"
+    },
+    {
+      "regla": "estadocum_en_dominio",
+      "critica": false,
+      "ok": true,
+      "filas_afectadas": 0,
+      "detalle": "valores permitidos: Activo, Inactivo"
+    },
+    {
+      "regla": "coherencia_estado_fechainactivo",
+      "critica": false,
+      "ok": false,
+      "filas_afectadas": 2960,
+      "detalle": "CUM 'Activo' no debería tener fechainactivo (reactivaciones)"
+    }
+  ],
+  "resultado": "OK",
+  "reglas_criticas_fallidas": []
+}

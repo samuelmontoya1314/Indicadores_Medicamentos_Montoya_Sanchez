@@ -1,0 +1,25 @@
+{
+  "raw_jsonl_local_bytes": 168783480,
+  "raw_jsonl_hdfs_bytes": 168783480,
+  "curada_parquet_hdfs_bytes": 14889779,
+  "filas_raw_hdfs": 156281,
+  "filas_curadas": 156281,
+  "reduccion_pct": 91.2,
+  "particiones": {
+    "A": 28076,
+    "B": 15627,
+    "C": 18464,
+    "D": 4618,
+    "G": 7426,
+    "H": 4490,
+    "J": 12276,
+    "L": 7318,
+    "M": 12612,
+    "N": 27103,
+    "P": 1180,
+    "R": 10135,
+    "S": 2813,
+    "V": 4143
+  },
+  "calidad": "OK"
+}

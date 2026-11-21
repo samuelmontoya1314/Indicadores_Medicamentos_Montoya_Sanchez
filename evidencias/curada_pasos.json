@@ -1,0 +1,59 @@
+[
+  {
+    "paso": "0_lectura_raw_hdfs",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "Se leen todos los sobres JSONL del data lake raw."
+  },
+  {
+    "paso": "1_descartar_sin_clave",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "Se descartan filas sin id_registro, expediente o consecutivocum: sin ellas no se puede identificar ni deduplicar el registro."
+  },
+  {
+    "paso": "2_deduplicar_id_registro",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "Se conserva una fila por id_registro (:id de Socrata): la versión con :updated_at más reciente.",
+    "detalle": "Si se usara la llave de negocio ['expedientecum', 'consecutivocum', 'principioactivo', 'nombrerol', 'tiporol'] se perderían registros legítimos repetidos por concentración o planta."
+  },
+  {
+    "paso": "3_normalizar_texto",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "trim, espacios múltiples -> uno, MAYÚSCULAS, sin tildes en categorías, 'S. A.' -> 'S.A.', vacíos -> nulo, muestramedica -> booleano."
+  },
+  {
+    "paso": "4_tipar_fechas",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "Las fechas llegan como texto 'MM/DD/YYYY'. Se convierten a date; las no convertibles o futuras imposibles quedan nulas."
+  },
+  {
+    "paso": "5_tipar_numeros",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "expediente, expedientecum y consecutivocum -> long; cantidad y cantidadcum -> double."
+  },
+  {
+    "paso": "6_tratar_nulos",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "Categorías nulas -> 'NO REPORTA'. fechainactivo nula (118.168 filas) SE CONSERVA: significa que el CUM sigue activo."
+  },
+  {
+    "paso": "7_columnas_derivadas",
+    "filas_antes": 156281,
+    "filas_despues": 156281,
+    "filas_eliminadas": 0,
+    "decision": "atc_nivel1, grupo_atc, cum_id, anio_expedicion, es_activo, es_importador."
+  }
+]

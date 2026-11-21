@@ -1,0 +1,26 @@
+{
+  "tablas": {
+    "ind_atc_estado": 14,
+    "ind_origen_atc": 14,
+    "ind_top_titulares": 15,
+    "ind_evolucion_anual": 37,
+    "ind_via_administracion": 47,
+    "ind_registros_tiporol": 2,
+    "ind_resumen": 1
+  },
+  "resumen": {
+    "cum_total": 65441,
+    "cum_activos": 50255,
+    "registros_sanitarios": 9500,
+    "titulares_activos": 1159,
+    "principios_activos": 5931,
+    "fecha_corte_fuente": "2026-11-16T12:13:21.891Z",
+    "filas_curadas": 156281,
+    "cum_inactivos": 15186,
+    "pct_cum_activos_con_importador": 38.6,
+    "pct_top10_titulares": 31.7,
+    "fuente": "Código Único de Medicamentos (CUM) vigentes - INVIMA (datos.gov.co, dataset i7cb-raxc)",
+    "url_fuente": "https://www.datos.gov.co/resource/i7cb-raxc.json",
+    "fecha_proceso": "2026-11-21T14:32:00-05:00"
+  }
+}

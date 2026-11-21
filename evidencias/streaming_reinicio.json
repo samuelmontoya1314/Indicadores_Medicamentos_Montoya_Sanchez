@@ -1,0 +1,14 @@
+{
+  "fecha": "2026-11-21T14:32:25-05:00",
+  "checkpoint_previo": true,
+  "mensajes_leidos_de_kafka_en_esta_corrida": 0,
+  "micro_lotes": 0,
+  "antes": {
+    "ventanas": 8,
+    "mensajes": 156281
+  },
+  "despues": {
+    "ventanas": 8,
+    "mensajes": 156281
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "fecha": "2026-11-21T14:31:15-05:00",
+  "grupo": "cum-hdfs",
+  "archivos": [
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0001.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0002.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0003.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0004.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0005.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0006.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0007.jsonl",
+      "mensajes": 20000
+    },
+    {
+      "ruta": "/datalake/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/lote_20261121T143100_0008.jsonl",
+      "mensajes": 16281
+    }
+  ],
+  "mensajes": 156281,
+  "lotes": 8,
+  "por_particion": {
+    "0": 52104,
+    "1": 52089,
+    "2": 52088
+  }
+}

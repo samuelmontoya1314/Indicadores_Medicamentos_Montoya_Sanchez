@@ -1,0 +1,12 @@
+{
+  "fecha": "2026-11-21T14:30:55-05:00",
+  "topico": "cum_medicamentos",
+  "mensajes": 156281,
+  "por_particion": {
+    "0": 52104,
+    "1": 52089,
+    "2": 52088
+  },
+  "errores": {},
+  "forzado": false
+}

@@ -1,0 +1,6 @@
+======================================================================
+Conteos por corrida (evidencias/idempotencia_corridas.jsonl)
+======================================================================
+ etiqueta  tipo_carga  registros_nuevos_api  lineas_raw_local  mensajes_en_kafka  lineas_raw_hdfs  filas_curadas  cum_en_servicio  mensajes_streaming                watermark  duracion_s
+corrida_1    completa                156281            156281             156281           156281         156281            65441              156281 2026-11-16T12:13:21.891Z        94.2
+corrida_2 incremental                     0            156281             156281           156281         156281            65441              156281 2026-11-16T12:13:21.891Z        24.8

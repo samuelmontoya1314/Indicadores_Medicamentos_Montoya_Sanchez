@@ -1,0 +1,12 @@
+*** SIMULACIÓN DE FALLO: se inyectan 10 filas duplicadas ***
+
+=== Validaciones de calidad ===
+  [OK ] conteo_mayor_que_cero: 156291 filas
+  [OK ] sin_nulos_en_columnas_clave: 0 fila/s afectada/s. id_registro, expediente, consecutivocum
+  [FALLA CRÍTICA] id_registro_sin_repetidos: 10 fila/s afectada/s. llave de deduplicación
+  Reporte de calidad: data/calidad/reporte_calidad_20261121T143600.json -> FALLA
+
+ PIPELINE DETENIDO: Validaciones críticas fallidas: ['id_registro_sin_repetidos']
+   No se escribió la zona curada y la marca de agua NO se movió.
+
+PIPELINE DETENIDO en 'Fase 5/6 - Zona curada + calidad' (código 2). Los pasos siguientes no se ejecutaron.

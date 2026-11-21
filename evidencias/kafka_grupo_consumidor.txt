@@ -1,0 +1,4 @@
+GROUP           TOPIC            PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID
+cum-hdfs        cum_medicamentos 0          52104           52104           0               -               -               -
+cum-hdfs        cum_medicamentos 1          52089           52089           0               -               -               -
+cum-hdfs        cum_medicamentos 2          52088           52088           0               -               -               -

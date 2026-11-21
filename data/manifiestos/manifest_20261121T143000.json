@@ -1,0 +1,48 @@
+{
+  "run_id": "20261121T143000",
+  "fuente": "datos.gov.co",
+  "dataset": "i7cb-raxc",
+  "nombre": "Código Único de Medicamentos (CUM) vigentes - INVIMA",
+  "url": "https://www.datos.gov.co/resource/i7cb-raxc.json",
+  "parametros": {
+    "$select": "*,:id,:created_at,:updated_at",
+    "$order": ":id"
+  },
+  "tamano_pagina": 50000,
+  "tipo_carga": "completa",
+  "watermark_anterior": null,
+  "watermark_nuevo": "2026-11-16T12:13:21.891Z",
+  "paginas": [
+    {
+      "offset": 0,
+      "registros": 50000,
+      "intentos": 1,
+      "segundos": 11.4
+    },
+    {
+      "offset": 50000,
+      "registros": 50000,
+      "intentos": 1,
+      "segundos": 12.1
+    },
+    {
+      "offset": 100000,
+      "registros": 50000,
+      "intentos": 1,
+      "segundos": 11.8
+    },
+    {
+      "offset": 150000,
+      "registros": 6281,
+      "intentos": 1,
+      "segundos": 2.3
+    }
+  ],
+  "total_registros": 156281,
+  "registros_sin_id": 0,
+  "archivo": "/content/pp-cum-invima/data/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/run_20261121T143000.jsonl",
+  "bytes": 168783480,
+  "inicio": "2026-11-21T14:30:00-05:00",
+  "fin": "2026-11-21T14:30:38-05:00",
+  "duracion_s": 38.0
+}
