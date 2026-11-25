@@ -6,9 +6,10 @@ Códigos vacíos o inválidos se agrupan como SIN_ATC. La misma regla se replica
 Spark para comparar resultados.
 """
 import json
+import re
 import sys
 
-GRUPOS = set("ABCDGHJLMNPRSV")
+PATRON_ATC = re.compile(r"^[ABCDGHJLMNPRSV][0-9]{2}")
 
 for linea in sys.stdin:
     linea = linea.strip()
@@ -20,6 +21,6 @@ for linea in sys.stdin:
         print("ERROR_JSON\t1")
         continue
     atc = ((sobre.get("payload") or {}).get("atc") or "").strip().upper()
-    grupo = atc[0] if atc and atc[0] in GRUPOS else "SIN_ATC"
+    grupo = atc[0] if PATRON_ATC.match(atc) else "SIN_ATC"
     print(f"{grupo}\t1")
 

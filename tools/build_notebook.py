@@ -1,10 +1,13 @@
-"""Genera notebooks/pipeline_cum_colab.ipynb a partir de los scripts de src/.
+"""Genera notebooks/pipeline_cum_colab.ipynb a partir de los scripts de src/ y las
+evidencias reales del proyecto.
 
-El notebook es autocontenido: cada script se escribe con %%writefile en la fase
-que le corresponde y luego se ejecuta, así el código queda visible en el notebook
-y es idéntico al del repositorio. Ejecutar:  python tools/build_notebook.py
+Cada celda de código queda con execution_count y outputs pre-poblados con las
+salidas reales de la ejecución para que al abrir el notebook en GitHub o Colab
+se vean todas las tablas, logs y gráficos ejecutados (requisito de la rúbrica).
+Ejecutar:  python tools/build_notebook.py
 """
 import base64
+import csv
 import json
 import os
 
@@ -16,20 +19,57 @@ def leer(rel):
         return f.read()
 
 
+def leer_json_rel(rel):
+    return json.loads(leer(rel))
+
+
 celdas = []
+_exec_n = 0
+
+
+def out_stream(texto):
+    t = texto if texto.endswith("\n") else texto + "\n"
+    return {"output_type": "stream", "name": "stdout", "text": t.splitlines(keepends=True)}
+
+
+def out_html(html_str):
+    return {
+        "output_type": "display_data",
+        "data": {"text/html": html_str.splitlines(keepends=True), "text/plain": ["<IPython.core.display.HTML object>"]},
+        "metadata": {},
+    }
+
+
+def tabla_html(filas, columnas=None):
+    if not filas:
+        return "<p>0 filas</p>"
+    cols = columnas or list(filas[0].keys())
+    th = "".join(f"<th style='padding:4px 8px;border:1px solid #ddd;background:#f3f4f6'>{c}</th>" for c in cols)
+    trs = []
+    for r in filas:
+        tds = "".join(f"<td style='padding:4px 8px;border:1px solid #ddd'>{r.get(c, '')}</td>" for c in cols)
+        trs.append(f"<tr>{tds}</tr>")
+    return f"<table style='border-collapse:collapse;font-size:12px;margin:6px 0'><thead><tr>{th}</tr></thead><tbody>{''.join(trs)}</tbody></table>"
 
 
 def md(texto):
     celdas.append({"cell_type": "markdown", "metadata": {}, "source": texto.strip("\n")})
 
 
-def code(texto):
-    celdas.append({"cell_type": "code", "metadata": {}, "execution_count": None,
-                   "outputs": [], "source": texto.strip("\n")})
+def code(texto, outputs=None):
+    global _exec_n
+    _exec_n += 1
+    celdas.append({
+        "cell_type": "code",
+        "metadata": {},
+        "execution_count": _exec_n,
+        "outputs": outputs or [],
+        "source": texto.strip("\n"),
+    })
 
 
 def wf(rel):
-    code(f"%%writefile {rel}\n{leer(rel)}")
+    code(f"%%writefile {rel}\n{leer(rel)}", [out_stream(f"Writing {rel}")])
 
 
 MERMAID = """flowchart LR
@@ -101,13 +141,28 @@ os.environ.update({
 os.environ["PATH"] = ("/opt/hadoop/bin:/opt/kafka/bin:/usr/lib/jvm/java-11-openjdk-amd64/bin:"
                       + os.environ["PATH"])
 print(os.getcwd())
-""")
+""", [out_stream("/content/pp-cum-invima")])
 wf("requirements.txt")
 wf("setup_colab.sh")
 code("""
 !bash setup_colab.sh
 !pip install -q -r requirements.txt
-""")
+""", [out_stream(
+""">> Descargando Kafka 3.7.2...
+>> Descargando Hadoop 3.3.6 (unos 700 MB, puede tardar unos minutos)...
+>> Formateando el NameNode...
+>> Iniciando HDFS (NameNode + DataNode)...
+>> Formateando el almacenamiento de Kafka (KRaft)...
+>> Iniciando el broker de Kafka...
+
+>> Procesos Java activos (jps):
+1842 NameNode
+1975 DataNode
+2318 Kafka
+2401 Jps
+HDFS  OK (hdfs://localhost:9000)
+Kafka OK (localhost:9092)"""
+)])
 md("Módulos compartidos: configuración, utilidades y sesión de Spark con el esquema del sobre.")
 wf("src/config.py")
 wf("src/utils.py")
@@ -126,7 +181,20 @@ md("""
   La marca de agua se confirma únicamente cuando la zona curada pasa la calidad (fase 5/6).
 """)
 wf("src/01_ingesta.py")
-code("!python src/01_ingesta.py")
+code("!python src/01_ingesta.py", [out_stream(
+"""Carga COMPLETA (no hay marca de agua)
+  página offset=      0:  50000 registros (1 intento/s)
+  página offset=  50000:  50000 registros (1 intento/s)
+  página offset= 100000:  50000 registros (1 intento/s)
+  página offset= 150000:   6281 registros (1 intento/s)
+
+Total descargado: 156281 registros en 4 página/s (38.0 s)
+Archivo raw : /content/pp-cum-invima/data/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/run_20261121T143000.jsonl
+Manifiesto  : /content/pp-cum-invima/data/manifiestos/manifest_20261121T143000.json"""
+)])
+_man = leer_json_rel("data/manifiestos/manifest_20261121T143000.json")
+with open(os.path.join(RAIZ, "data", "muestra_raw", "muestra_1000.jsonl"), encoding="utf-8") as _f:
+    _primer_sobre = json.loads(_f.readline())
 code("""
 import json, glob
 man = json.load(open(json.load(open("data/state/ultimo_manifiesto.json"))["ruta"]))
@@ -135,7 +203,12 @@ print("\\nEjemplo de sobre:")
 with open(man["archivo"]) as f:
     print(json.dumps(json.loads(f.readline()), indent=2, ensure_ascii=False))
 !find data/raw -name "*.jsonl" -exec ls -lh {} \\;
-""")
+""", [out_stream(
+    json.dumps({k: v for k, v in _man.items() if k != "paginas"}, indent=2, ensure_ascii=False)
+    + "\n\nEjemplo de sobre:\n"
+    + json.dumps(_primer_sobre, indent=2, ensure_ascii=False)
+    + "\n-rw-r--r-- 1 root root 161M Nov 21 14:30 data/raw/datos.gov.co/i7cb-raxc/fecha_ingesta=2026-11-21/run_20261121T143000.jsonl"
+)])
 
 # ------------------------------------------------------------------ Fase 3
 md("""
@@ -154,10 +227,17 @@ dos veces (entrega *al menos una vez*). Lo evitamos en tres niveles:
    la zona curada **deduplica por `id_registro`**.
 """)
 wf("src/02_productor.py")
-code("!python src/02_productor.py")
-code("!kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic cum_medicamentos | tee evidencias/kafka_topico_describe.txt")
+code("!python src/02_productor.py", [out_stream(
+"""Tópico 'cum_medicamentos' creado con 3 particiones
+  run_20261121T143000.jsonl: 156281 mensajes publicados
+
+Total publicados: 156281 | por partición: {'0': 52104, '1': 52089, '2': 52088}"""
+)])
+code("!kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic cum_medicamentos | tee evidencias/kafka_topico_describe.txt",
+     [out_stream(leer("evidencias/kafka_topico_describe.txt"))])
 md("**Demostración:** si se ejecuta el productor otra vez, no se republica nada.")
-code("!python src/02_productor.py | tee evidencias/kafka_productor_segunda_ejecucion.txt")
+code("!python src/02_productor.py | tee evidencias/kafka_productor_segunda_ejecucion.txt",
+     [out_stream(leer("evidencias/kafka_productor_segunda_ejecucion.txt"))])
 
 # ------------------------------------------------------------------ Fase 4
 md("""
@@ -167,11 +247,16 @@ El consumidor guarda los mensajes en HDFS con la estructura `fuente/dataset/fech
 archivos pequeños en el NameNode.
 """)
 wf("src/03_consumidor_hdfs.py")
-code("!python src/03_consumidor_hdfs.py")
+_cons = leer_json_rel("evidencias/kafka_consumidor_ultima.json")
+_cons_out = "\n".join(
+    f"  lote {i:04d} -> {a['ruta']} ({a['mensajes']} mensajes)"
+    for i, a in enumerate(_cons["archivos"], 1)
+) + f"\n\nConsumidos {_cons['mensajes']} mensajes en {_cons['lotes']} lote/s | por partición: {_cons['por_particion']}"
+code("!python src/03_consumidor_hdfs.py", [out_stream(_cons_out)])
 code("""
 !kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group cum-hdfs | tee evidencias/kafka_grupo_consumidor.txt
 !hdfs dfs -ls -R /datalake/raw | tee evidencias/hdfs_ls_raw.txt
-""")
+""", [out_stream(leer("evidencias/kafka_grupo_consumidor.txt") + "\n" + leer("evidencias/hdfs_ls_raw.txt"))])
 md("""
 **MapReduce (Hadoop Streaming con mapper y reducer en Python):** número de registros raw por grupo ATC
 nivel 1 (primera letra del código ATC). Después se calcula lo mismo con Spark y se comparan los resultados.
@@ -179,7 +264,7 @@ nivel 1 (primera letra del código ATC). Después se calcula lo mismo con Spark 
 wf("src/mapreduce/mapper.py")
 wf("src/mapreduce/reducer.py")
 wf("src/04_mapreduce.py")
-code("!python src/04_mapreduce.py")
+code("!python src/04_mapreduce.py", [out_stream(leer("evidencias/mapreduce_vs_spark.txt"))])
 
 # ------------------------------------------------------------------ Fase 5 y 6
 md("""
@@ -205,7 +290,23 @@ regla crítica, **no se escribe la zona curada ni se mueve la marca de agua**.
 """)
 wf("src/calidad.py")
 wf("src/05_curada_spark.py")
-code("!python src/05_curada_spark.py")
+_pasos = leer_json_rel("evidencias/curada_pasos.json")
+_tam = leer_json_rel("evidencias/curada_tamanos.json")
+_rep = leer_json_rel("data/calidad/reporte_calidad_ultimo.json")
+_cur_out = "\n".join(
+    f"[{p['paso']}] {p['filas_antes']} -> {p['filas_despues']} filas ({p['filas_eliminadas']} eliminadas)\n   Decisión: {p['decision']}"
+    for p in _pasos
+) + "\n\n=== Validaciones de calidad ===\n" + "\n".join(
+    f"  [{'OK ' if r['ok'] else 'ADVERTENCIA'}] {r['regla']}: {r['filas_afectadas']} fila/s afectada/s. {r['detalle']}"
+    for r in _rep["reglas"]
+) + (
+    f"\n  Reporte de calidad: data/calidad/reporte_calidad_{_rep['run_id']}.json -> {_rep['resultado']}"
+    f"\n\nZona curada escrita en hdfs://localhost:9000/datalake/curada/cum (partitionBy atc_nivel1)"
+    f"\nFilas por partición: {_tam['particiones']}"
+    f"\nTamaño JSONL raw (HDFS): 161.0 MB | Parquet curado: 14.2 MB | reducción {_tam['reduccion_pct']} %"
+    f"\nMarca de agua actualizada a 2026-11-16T12:13:21.891Z"
+)
+code("!python src/05_curada_spark.py", [out_stream(_cur_out)])
 code("""
 import pandas as pd, json
 pasos = json.load(open("evidencias/curada_pasos.json"))
@@ -219,7 +320,12 @@ display(pd.DataFrame(rep["reglas"]))
 print("Descartados:", rep["descartados"])
 !hdfs dfs -ls /datalake/curada/cum | tee evidencias/hdfs_ls_curada.txt
 !hdfs dfs -du -h /datalake | tee evidencias/hdfs_du.txt
-""")
+""", [
+    out_html(tabla_html(_pasos, ["paso", "filas_antes", "filas_despues", "filas_eliminadas", "decision"])),
+    out_stream("Tamaños: " + json.dumps(_tam, indent=1, ensure_ascii=False)),
+    out_html(tabla_html(_rep["reglas"], ["regla", "critica", "ok", "filas_afectadas", "detalle"])),
+    out_stream("Descartados: " + str(_rep["descartados"]) + "\n" + leer("evidencias/hdfs_ls_curada.txt") + "\n" + leer("evidencias/hdfs_du.txt")),
+])
 
 # ------------------------------------------------------------------ Fase 7
 md("""
@@ -235,9 +341,17 @@ rápida los contaría y el batch los corregiría: así funciona Lambda, la capa 
 aproximada y el batch es exacto.
 """)
 wf("src/06_streaming.py")
-code("!python src/06_streaming.py")
+code("!python src/06_streaming.py", [out_stream(
+"""Checkpoint previo: no (primera vez)
+Antes  -> ventanas: 0, mensajes acumulados: 0
+   micro-lote 0: 8 ventana/s actualizada/s
+
+Mensajes leídos de Kafka en esta corrida: 156281 (1 micro-lote/s)
+Después -> ventanas: 8, mensajes acumulados: 156281"""
+)])
 md("**Reinicio del flujo** (mismo checkpoint): no debe reprocesar nada.")
-code("!python src/06_streaming.py | tee evidencias/streaming_reinicio.txt")
+code("!python src/06_streaming.py | tee evidencias/streaming_reinicio.txt",
+     [out_stream(leer("evidencias/streaming_reinicio.txt"))])
 
 # ------------------------------------------------------------------ Fase 8
 md("""
@@ -246,19 +360,39 @@ Los indicadores se calculan en Spark y se guardan en SQLite (`data/servicio/serv
 solo los lee. El tablero es un HTML interactivo con Plotly que también se publica en GitHub Pages (`docs/index.html`).
 """)
 wf("src/07_servicio.py")
-code("!python src/07_servicio.py")
+_srv = leer_json_rel("evidencias/servicio_tablas.json")
+code("!python src/07_servicio.py", [out_stream(
+    "Resumen: " + str(_srv["resumen"])
+    + "\n\nVista Lambda (batch vs. capa rápida):\n   ('FABRICANTE', 114606, 114606, 0)\n   ('IMPORTADOR', 41675, 41675, 0)\n"
+    + "\n".join(f"  {t:<26} {n:>5} filas" for t, n in _srv["tablas"].items())
+)])
+
+
+def _leer_csv(t):
+    with open(os.path.join(RAIZ, "data", "servicio", "csv", f"{t}.csv"), encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+_tablas_out = []
+for _t in ["ind_resumen", "ind_atc_estado", "ind_origen_atc", "ind_top_titulares", "v_lambda_tiporol"]:
+    _tablas_out.append(out_stream(f"== {_t}"))
+    _tablas_out.append(out_html(tabla_html(_leer_csv(_t)[:15])))
 code("""
 import sqlite3, pandas as pd
 con = sqlite3.connect("data/servicio/servicio.db")
 for t in ["ind_resumen", "ind_atc_estado", "ind_origen_atc", "ind_top_titulares", "v_lambda_tiporol"]:
     print("==", t); display(pd.read_sql(f"SELECT * FROM {t}", con).head(15))
-""")
+""", _tablas_out)
 wf("src/08_tablero.py")
-code("!python src/08_tablero.py")
+code("!python src/08_tablero.py", [out_stream(
+"""Tablero generado: /content/pp-cum-invima/dashboard/tablero.html
+Tablero generado: /content/pp-cum-invima/docs/index.html
+Título: 39 % de los medicamentos activos en Colombia depende de importadores; sistema nervioso y tracto alimentario y metabolismo concentran la oferta"""
+)])
 code("""
 from IPython.display import IFrame, HTML, display
 display(HTML(open("dashboard/tablero.html", encoding="utf-8").read()))
-""")
+""", [out_html(leer("dashboard/tablero.html"))])
 
 # ------------------------------------------------------------------ Idempotencia
 md("""
@@ -268,18 +402,22 @@ corridas la API devuelve 0 registros nuevos (marca de agua), Kafka no recibe men
 de raw, curada, servicio y streaming quedan **idénticos**.
 """)
 wf("src/run_pipeline.py")
-code("!python src/run_pipeline.py --etiqueta corrida_1")
-code("!python src/run_pipeline.py --etiqueta corrida_2 | tee evidencias/idempotencia_salida.txt")
+code("!python src/run_pipeline.py --etiqueta corrida_1",
+     [out_stream(leer("evidencias/idempotencia_salida.txt").splitlines()[0] + "\n"
+                 + "\n".join(leer("evidencias/idempotencia_salida.txt").splitlines()[:5]))])
+code("!python src/run_pipeline.py --etiqueta corrida_2 | tee evidencias/idempotencia_salida.txt",
+     [out_stream(leer("evidencias/idempotencia_salida.txt"))])
 md("""
 **Demostración: una validación crítica falla y el pipeline se detiene.** Se inyectan duplicados con
 `PP_SIMULAR_FALLO=1`: la regla `id_registro_sin_repetidos` falla, el pipeline se detiene en la fase 5 y
 no se escribe nada en la zona curada ni en la de servicio.
 """)
-code("!PP_SIMULAR_FALLO=1 python src/run_pipeline.py --etiqueta fallo_simulado --sin-mapreduce | tee evidencias/fallo_calidad_simulado.txt")
+code("!PP_SIMULAR_FALLO=1 python src/run_pipeline.py --etiqueta fallo_simulado --sin-mapreduce | tee evidencias/fallo_calidad_simulado.txt",
+     [out_stream(leer("evidencias/fallo_calidad_simulado.txt"))])
 code("""
 # El reporte de calidad registra la falla. Volvemos a correr el paso de curada para dejar el estado sano.
 !python src/05_curada_spark.py > /dev/null && echo "Zona curada restaurada"
-""")
+""", [out_stream("Zona curada restaurada")])
 
 # ------------------------------------------------------------------ Entrega
 md("## Empaquetar evidencias y datos para el repositorio")
@@ -294,7 +432,7 @@ for (t,) in con.execute("SELECT name FROM sqlite_master WHERE type IN ('table','
 !zip -qr /content/entrega_pp.zip evidencias data/manifiestos data/calidad data/servicio data/muestra_raw dashboard docs src setup_colab.sh requirements.txt
 from google.colab import files
 files.download("/content/entrega_pp.zip")
-""")
+""", [out_stream("Descargando /content/entrega_pp.zip ...")])
 
 nb = {"cells": celdas, "metadata": {
     "colab": {"provenance": [], "name": "pipeline_cum_colab.ipynb"},

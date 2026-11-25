@@ -49,7 +49,7 @@ def correr_spark():
     raw = leer_raw_hdfs(spark)
     atc = F.upper(F.trim(F.coalesce(F.col("payload.atc"), F.lit(""))))
     letra = F.substring(atc, 1, 1)
-    grupo = F.when(letra.isin(list("ABCDGHJLMNPRSV")), letra).otherwise(F.lit("SIN_ATC"))
+    grupo = F.when(atc.rlike(r"^[ABCDGHJLMNPRSV][0-9]{2}"), letra).otherwise(F.lit("SIN_ATC"))
     filas = raw.groupBy(grupo.alias("grupo")).count().collect()
     spark.stop()
     return {r["grupo"]: r["count"] for r in filas}
